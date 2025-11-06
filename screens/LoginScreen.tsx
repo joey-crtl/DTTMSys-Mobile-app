@@ -199,7 +199,7 @@ useEffect(() => {
           <TextInput
             placeholder="6-digit code"
             keyboardType="number-pad"
-            style={styles.input}
+            style={styles.twoFAInput} // use this style
             value={twoFACode}
             onChangeText={setTwoFACode}
           />
@@ -226,29 +226,31 @@ useEffect(() => {
             placeholder="Email"
             keyboardType="email-address"
             autoCapitalize="none"
-            style={styles.input}
+            style={[styles.input, { marginBottom: 16 }]}
             value={email}
             onChangeText={setEmail}
           />
-          <View style={styles.inputContainer}>
+          <View style={styles.passwordContainer}>
             <TextInput
               placeholder="Password"
               secureTextEntry={!showPassword}
-              style={styles.input}
+              style={styles.passwordInput}
               value={password}
               onChangeText={setPassword}
+              autoCapitalize="none"
+              textContentType="password"
             />
             <TouchableOpacity
-              style={styles.eyeIcon}
               onPress={() => setShowPassword(!showPassword)}
+              style={styles.passwordToggle}
             >
-              <FontAwesome name={showPassword ? "eye" : "eye-slash"} size={20} color="#666" />
+              <FontAwesome
+                name={showPassword ? "eye" : "eye-slash"}
+                size={20}
+                color="#666"
+              />
             </TouchableOpacity>
           </View>
-
-          <TouchableOpacity onPress={() => Alert.alert('Forgot Password', 'Reset password flow coming soon')}>
-            <Text style={styles.forgotPassword}>Forgot Password?</Text>
-          </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.signInButton, loading && { opacity: 0.7 }]}
@@ -303,28 +305,56 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: '#fafafa',
     paddingRight: 40, // space for eye icon
-    textAlignVertical: 'center', // ✅ vertically center placeholder/text
+    textAlignVertical: 'center',
+    marginBottom: 16,
   },
-  forgotPassword: { color: '#007bff', alignSelf: 'flex-end', marginBottom: 10 },
+  forgotPassword: { color: '#007bff', alignSelf: 'flex-end', marginBottom: 16 },
   signInButton: { backgroundColor: '#228B73', paddingVertical: 14, borderRadius: 10, width: '100%', marginBottom: 20 },
   signInButtonText: { color: '#fff', textAlign: 'center', fontWeight: '600', fontSize: 16 },
-  orText: { color: '#666', fontSize: 14, marginBottom: 15 },
+  orText: { color: '#666', fontSize: 14, marginBottom: 16 },
   googleButton: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#DB4437', paddingVertical: 12, paddingHorizontal: 20, borderRadius: 10, marginBottom: 25 },
   googleText: { color: '#fff', fontWeight: '500', fontSize: 16 },
   signUpText: { fontSize: 15, color: '#444', marginTop: 5 },
-  eyeIcon: {
-    position: 'absolute',
-    right: 12,
-    top: '50%',
-    transform: [{ translateY: -10 }], // vertically center the icon
+  passwordContainer: {
+  flexDirection: 'row',       // align input + toggle horizontally
+  alignItems: 'center',       // vertical center
+  width: '100%',
+  borderWidth: 1,
+  borderColor: '#ddd',
+  borderRadius: 8,
+  backgroundColor: '#fafafa',
+  paddingHorizontal: 12,
+  marginBottom: 16,
+  },
+  passwordInput: {
+    flex: 1,                    // take all remaining space
+    paddingVertical: 12,
+    fontSize: 16,
+    color: '#000',
+  },
+  passwordToggle: {
+    marginLeft: 8,               // spacing between text and icon
+    padding: 4,                  // slightly larger touchable area
   },
   twoFAContainer: {
-  flex: 1,
-  justifyContent: 'center', // vertically center
-  alignItems: 'center',     // horizontally center
-  padding: 24,
-  backgroundColor: '#fff',
-},
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+    backgroundColor: '#fff',
+  },
+
+  twoFAInput: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    padding: 12,
+    borderRadius: 8,
+    backgroundColor: '#fafafa',
+    textAlignVertical: 'center',
+    marginTop: 16,   // gap between label and input
+    marginBottom: 20 // gap between input and button
+  },
 });
 
 export default LoginScreen;

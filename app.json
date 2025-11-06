@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "mobile-app",
+    "name": "Doctor Travel & Tours",
     "slug": "mobile-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -29,11 +29,15 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-build-properties"
     ],
-        "extra": {
+    "extra": {
       "SUPABASE_URL": "https://sdayzkpfodzqbpugprwq.supabase.co",
-      "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNkYXl6a3Bmb2R6cWJwdWdwcndxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4MzA2NzQsImV4cCI6MjA3NDQwNjY3NH0.ozCxGQ2LSCVMNk2cWzeTFfpYJpW0LHzZ5KTzZnkPk5s"
+      "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNkYXl6a3Bmb2R6cWJwdWdwcndxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4MzA2NzQsImV4cCI6MjA3NDQwNjY3NH0.ozCxGQ2LSCVMNk2cWzeTFfpYJpW0LHzZ5KTzZnkPk5s",
+      "eas": {
+        "projectId": "abd40af3-6ba1-4bc5-a0ef-6a108c653234"
+      }
     }
   }
 }

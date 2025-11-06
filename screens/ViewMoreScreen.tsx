@@ -38,7 +38,7 @@ const ViewMoreScreen: React.FC<Props> = ({ navigation }) => {
       const combined = [
         ...(localData || []).map((item: any) => ({
           id: item.id.toString(),
-          image: item.main_photo ? { uri: item.main_photo } : require('../assets/placeholder.png'),
+          image: item.main_photo ? { uri: item.main_photo } : require('../assets/hp1.png'),
           airline: item.name || item.destination || 'Unknown Package',
           destination: item.destination || 'Unknown',
           location: item.destination || 'Unknown',
@@ -48,7 +48,7 @@ const ViewMoreScreen: React.FC<Props> = ({ navigation }) => {
         })),
         ...(packageData || []).map((item: any) => ({
           id: item.id.toString(),
-          image: item.main_photo ? { uri: item.main_photo } : require('../assets/placeholder.png'),
+          image: item.main_photo ? { uri: item.main_photo } : require('../assets/hp1.png'),
           airline: item.name || item.destination || 'Unknown Package',
           destination: item.destination || 'Unknown',
           location: item.destination || 'Unknown',

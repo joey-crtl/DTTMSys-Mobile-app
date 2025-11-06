@@ -83,42 +83,43 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
   // ----------------------------
   // ✅ UPDATED Email & Password registration
   // ----------------------------
-  const handleRegister = async () => {
-    if (!name || !email || !password) {
-      Alert.alert('Missing Fields', 'Please fill out all fields.');
-      return;
-    }
+const handleRegister = async () => {
+  if (!name || !email || !password) {
+    Alert.alert('Missing Fields', 'Please fill out all fields.');
+    return;
+  }
 
-    try {
-      setLoading(true);
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
+  try {
+    setLoading(true);
 
-      // Save user in Firestore
-      await setDoc(doc(db, 'users', user.uid), {
-        name,
-        email,
-        createdAt: new Date(),
-        isVerified: false, // ✅ New field
-      });
+    // Create the user with email and password
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
 
-      // ✅ Send Firebase email verification
-      await sendEmailVerification(user);
+    // Save user info directly to Firestore using the returned user
+    await setDoc(doc(db, 'users', user.uid), {
+      name,
+      email,
+      createdAt: new Date(),
+      isVerified: false,
+    });
 
-      Alert.alert(
-        'Verify Your Email',
-        'A verification link has been sent to your email. Please verify before logging in. Please check the spam folder'
-      );
+    // Send email verification
+    await sendEmailVerification(user);
 
-      navigation.replace('Login'); 
-    } catch (err: any) {
-      console.error(err);
-      Alert.alert('Registration Failed', err.message || 'Something went wrong');
-    } finally {
-      setLoading(false);
-    }
-  };
+    Alert.alert(
+      'Verify Your Email',
+      'A verification link has been sent to your email. Please verify before logging in.'
+    );
 
+    navigation.replace('Login');
+  } catch (err: any) {
+    console.error(err);
+    Alert.alert('Registration Failed', err.message || 'Something went wrong');
+  } finally {
+    setLoading(false);
+  }
+};
   // ----------------------------
   // Save user to Firestore
   // ----------------------------
