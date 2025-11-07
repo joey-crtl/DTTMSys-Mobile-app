@@ -1,15 +1,15 @@
 {
   "expo": {
     "name": "Doctor Travel & Tours",
-    "slug": "mobile-app",
+    "slug": "mobile-app-v6",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon-v2.png",
     "scheme": "mobileapp",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/splash-icon-v2.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -18,12 +18,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/adaptive-icon.png-v2",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.mrjoey0125.mobileapp"
+      "package": "com.mrjoey0125.mobileappv3"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -35,9 +35,17 @@
     "extra": {
       "SUPABASE_URL": "https://sdayzkpfodzqbpugprwq.supabase.co",
       "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNkYXl6a3Bmb2R6cWJwdWdwcndxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4MzA2NzQsImV4cCI6MjA3NDQwNjY3NH0.ozCxGQ2LSCVMNk2cWzeTFfpYJpW0LHzZ5KTzZnkPk5s",
+      "firebaseApiKey": "AIzaSyCViXSj-uPaivwiGFxGcXLzQEya1fsFJU8",
+      "firebaseAuthDomain": "doctortravelandtours-2b105.firebaseapp.com",
+      "firebaseProjectId": "doctortravelandtours-2b105",
+      "firebaseStorageBucket": "doctortravelandtours-2b105.appspot.com",
+      "firebaseMessagingSenderId": "1064871146283",
+      "firebaseAppId": "1:1064871146283:web:33637d5787688afea9cb6e",
+      "googleClientId": "397098110117-rj5p67k9g2d9mnrgeoq2q5j494iq40hi.apps.googleusercontent.com",
       "eas": {
-        "projectId": "abd40af3-6ba1-4bc5-a0ef-6a108c653234"
+        "projectId": "111c6bc3-f03e-43d7-b6f1-9eb0470b847d"
       }
-    }
+    },
+    "owner": "mrjoey0125"
   }
 }

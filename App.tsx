@@ -6,6 +6,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { supabase } from './supabaseClient';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebaseConfig';
+import Constants from 'expo-constants';
+
 
 // ----- Screen Imports -----
 import SplashScreen from './screens/SplashScreens';
@@ -204,16 +206,23 @@ const FavoritesProvider = ({ children }: { children: ReactNode }) => {
 // ----- App Component -----
 export default function App() {
 
+const SUPABASE_ANON_KEY = Constants.expoConfig?.extra?.SUPABASE_ANON_KEY;
+
 useEffect(() => {
   const triggerGeocode = async () => {
+    if (!SUPABASE_ANON_KEY) {
+      console.warn('Supabase anon key missing, skipping geocode trigger');
+      return;
+    }
+
     try {
       const res = await fetch(
         'https://sdayzkpfodzqbpugprwq.functions.supabase.co/geocode-itineraries',
         {
-          method: 'POST', // or GET depending on your function
+          method: 'POST',
           headers: {
-            'Authorization': `Bearer ${process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY}`,
-            'apikey': process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            'apikey': SUPABASE_ANON_KEY,
             'Content-Type': 'application/json',
           },
         }
