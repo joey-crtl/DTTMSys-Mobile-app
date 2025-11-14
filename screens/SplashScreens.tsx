@@ -16,7 +16,6 @@ const SplashScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Replace this Image source with your actual logo */}
       <Image source={require('../assets/logoo.png')} style={styles.logo} />
       <Text style={styles.text}>Doctor Travel & Tour</Text>
     </View>
