@@ -1,5 +1,7 @@
 // App.tsx
-
+declare const global: {
+  HermesInternal?: any;
+} & typeof globalThis;
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -205,6 +207,8 @@ const FavoritesProvider = ({ children }: { children: ReactNode }) => {
 
 // ----- App Component -----
 export default function App() {
+
+ console.log('Hermes enabled?', !!global.HermesInternal);
 
 const SUPABASE_ANON_KEY = Constants.expoConfig?.extra?.SUPABASE_ANON_KEY;
 

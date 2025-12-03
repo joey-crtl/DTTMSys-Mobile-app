@@ -15,7 +15,7 @@ import {
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList, PackageType } from '../App';
 import { Ionicons } from '@expo/vector-icons';
-import { Picker } from '@react-native-picker/picker';
+import RNPickerSelect from "react-native-picker-select";
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { supabase } from '../supabaseClient';
 import Constants from 'expo-constants';
@@ -244,32 +244,34 @@ const TravellerInfoScreen: React.FC<Props> = ({ navigation, route }) => {
 
               {/* Gender Picker */}
               <View style={styles.pickerWrapper}>
-                <Picker
-                  selectedValue={formData.gender}
+                <RNPickerSelect
+                  placeholder={{ label: "Select Gender", value: "" }}
                   onValueChange={(val) => handleChange('gender', val)}
-                  style={styles.picker}
-                >
-                  <Picker.Item label="Select Gender" value="" />
-                  <Picker.Item label="Male" value="Male" />
-                  <Picker.Item label="Female" value="Female" />
-                  <Picker.Item label="Other" value="Other" />
-                </Picker>
+                  value={formData.gender}
+                  items={[
+                    { label: "Male", value: "Male" },
+                    { label: "Female", value: "Female" },
+                    { label: "Other", value: "Other" }
+                  ]}
+                  style={pickerSelectStyles}
+                />
               </View>
 
               {/* Document Type */}
               <View style={styles.pickerWrapper}>
-                <Picker
-                  selectedValue={formData.documentType}
+                <RNPickerSelect
+                  placeholder={{ label: "Select Document Type", value: "" }}
                   onValueChange={(val) => handleChange('documentType', val)}
-                  style={styles.picker}
-                >
-                  <Picker.Item label="Select Document Type" value="" />
-                  <Picker.Item label="Passport" value="Passport" />
-                  <Picker.Item label="Driver's License" value="Driver's License" />
-                  <Picker.Item label="National ID" value="National ID" />
-                  <Picker.Item label="Visa" value="Visa" />
-                  <Picker.Item label="Other" value="Other" />
-                </Picker>
+                  value={formData.documentType}
+                  items={[
+                    { label: "Passport", value: "Passport" },
+                    { label: "Driver's License", value: "Driver's License" },
+                    { label: "National ID", value: "National ID" },
+                    { label: "Visa", value: "Visa" },
+                    { label: "Other", value: "Other" }
+                  ]}
+                  style={pickerSelectStyles}
+                />
               </View>
 
               {/* Document Number */}
@@ -318,5 +320,26 @@ const styles = StyleSheet.create({
   confirmBtn: { marginTop: 15, backgroundColor: '#228B73', paddingVertical: 14, borderRadius: 14, alignItems: 'center', shadowColor: '#000', shadowOpacity: 0.15, shadowOffset: { width: 0, height: 3 }, shadowRadius: 5, elevation: 3 },
   confirmText: { color: '#fff', fontWeight: '700', fontSize: 16 },
 });
+
+const pickerSelectStyles = {
+  inputIOS: {
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: "#e6e6e6",
+    borderRadius: 14,
+    color: "#111",
+    marginBottom: 12,
+  },
+  inputAndroid: {
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: "#e6e6e6",
+    borderRadius: 14,
+    color: "#111",
+    marginBottom: 12,
+  },
+};
 
 export default TravellerInfoScreen;

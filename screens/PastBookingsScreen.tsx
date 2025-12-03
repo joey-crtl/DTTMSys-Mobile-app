@@ -20,9 +20,14 @@ import Constants from 'expo-constants';
 import { getAuth } from 'firebase/auth';
 
 // Supabase
-const SUPABASE_URL = Constants.expoConfig?.extra?.SUPABASE_URL!;
-const SUPABASE_ANON_KEY = Constants.expoConfig?.extra?.SUPABASE_ANON_KEY!;
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const SUPABASE_URL = Constants.expoConfig?.extra?.SUPABASE_URL;
+const SUPABASE_ANON_KEY = Constants.expoConfig?.extra?.SUPABASE_ANON_KEY;
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  console.error('Supabase keys missing! Make sure you set them in app.config.js or EAS secrets.');
+  // Optional: show user-friendly message
+  alert('App configuration error. Please contact support.');
+}
+const supabase = createClient(SUPABASE_URL ??'', SUPABASE_ANON_KEY??'');
 const auth = getAuth();
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PastBookingsScreen'>;

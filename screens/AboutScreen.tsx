@@ -16,40 +16,40 @@ const teamMembers = [
     name: "Kryshia Dean",
     role: "Manager",
     description:
-      "With over 15 years of experience in global travel, Kryshia founded Horizon Travels to help others explore the world with ease and confidence.",
-    image: require("../assets/profile.jpg"),
+      "With over 5 years of experience in global travel, I lead the team with a vision to make exploring the world simpler, more accessible, and more enjoyable for everyone.",
+    image: require("../assets/DOC.jpg"),
   },
   {
     id: "2",
     name: "Jose Enrique Soliman",
     role: "Team Leader",
     description:
-      "With over 15 years of experience in global travel, Kryshia founded Horizon Travels to help others explore the world with ease and confidence.",
-    image: require("../assets/profile.jpg"),
+      "As a Lead Developer, I make sure every system runs smoothly by combining collaboration and technical expertise to deliver efficient travel solutions.",
+    image: require("../assets/SOLI.jpg"),
   },
   {
     id: "3",
     name: "Kathlyn Leal",
     role: "Designer",
     description:
-      "With over 15 years of experience in global travel, Kryshia founded Horizon Travels to help others explore the world with ease and confidence.",
-    image: require("../assets/profile.jpg"),
+      "I’m passionate about creating visually engaging and user-friendly designs that make every travel experience more enjoyable and seamless",
+    image: require("../assets/KATH.jpg"),
   },
   {
     id: "4",
     name: "Rogie Cabunas",
     role: "Documentation",
     description:
-      "With over 15 years of experience in global travel, Kryshia founded Horizon Travels to help others explore the world with ease and confidence.",
-    image: require("../assets/profile.jpg"),
+      "I focus on clarity and precision in every document I create, ensuring that system information is easy to understand and accessible to everyone.",
+    image: require("../assets/GIE.jpg"),
   },
   {
     id: "5",
     name: "Jhon Lee Teofilo",
     role: "Developer",
     description:
-      "With over 15 years of experience in global travel, Kryshia founded Horizon Travels to help others explore the world with ease and confidence.",
-    image: require("../assets/profile.jpg"),
+      "A passionate developer dedicated to creating efficient, user-friendly systems that enhance travel experiences for everyone",
+    image: require("../assets/LEE.jpg"),
   },
 ];
 
@@ -80,11 +80,13 @@ const AboutUsScreen = ({ navigation }: any) => {
           <View style={styles.storyText}>
             <Text style={styles.storyHeading}>Where It All Began</Text>
             <Text style={styles.storyDesc}>
-              In 2018, I founded (Company Name) Travel Agency after a life
-              changing solo trip across Southeast Asia. I realized how many
-              people dreamed of traveling but felt overwhelmed by the planning.
-              I wanted to create a company that made travel easy, personal, and
-              unforgettable. That passion sparked the birth of (Company Name).
+              Doctor Travel & Tours started as a simple dream shared by a group of doctors 
+              who found healing not only in medicine—but in travel. Before the pandemic, our 
+              founders spent their free time exploring breathtaking destinations, 
+              discovering the joy of new experiences, and realizing how travel can rejuvenate 
+              both body and soul. This shared passion inspired the birth of 
+              Doctor Travel & Tours—built on the belief that travel, like medicine, 
+              can be the perfect remedy for life’s stresses.
             </Text>
           </View>
         </View>
@@ -94,9 +96,12 @@ const AboutUsScreen = ({ navigation }: any) => {
           <View style={styles.storyText}>
             <Text style={styles.storyHeading}>Growing with Passion</Text>
             <Text style={styles.storyDesc}>
-              Now, we continue to grow adapting, exploring, and creating
-              unforgettable travel experiences. But no matter how far we go, our
-              heart remains in helping others see the world.
+              When the pandemic struck, the world came to a standstill. 
+              Flights were grounded, borders closed, and dreams were momentarily paused. 
+              For us, it was a heartbreaking chapter. 
+              Yet amid the uncertainty, our passion for travel never faded. 
+              We used that time to strengthen our vision, improve our services, and 
+              prepare for the day people could explore again—safely, comfortably, and confidently.
             </Text>
           </View>
         </View>
@@ -106,9 +111,12 @@ const AboutUsScreen = ({ navigation }: any) => {
           <View style={styles.storyText}>
             <Text style={styles.storyHeading}>Looking Ahead</Text>
             <Text style={styles.storyDesc}>
-              We’re here to guide, support, and inspire every step of your
-              journey. Whether it’s your first trip or your fiftieth, we treat
-              every adventure like it’s our own.
+              Today, Doctor Travel & Tours stands stronger than ever. 
+              What began as a group of doctors who love traveling has grown 
+              into a dedicated team committed to crafting seamless, joy-filled adventures for everyone. 
+              We continue to live by our promise—Your Rx for Adventure—because we believe that travel 
+              remains one of life’s greatest medicines, bringing healing, happiness, and connection 
+              wherever the journey leads.
             </Text>
           </View>
         </View>
@@ -140,15 +148,15 @@ const AboutUsScreen = ({ navigation }: any) => {
           <View style={styles.mvBox}>
             <Text style={styles.mvHeading}>Mission</Text>
             <Text style={styles.mvText}>
-              To provide accessible, reliable, and comfortable travel
-              experiences that connect people and cultures worldwide.
+              At Doctor Travel & Tours, we believe travel is the best medicine—our 
+              mission is to make every adventure easy, fun, and full of heartwarming memories.
             </Text>
           </View>
           <View style={styles.mvBox}>
             <Text style={styles.mvHeading}>Vision</Text>
             <Text style={styles.mvText}>
-              To become a global leader in air travel services, recognized for
-              customer satisfaction, innovation, and excellence.
+              To become a leading name in the travel industry by consistently providing excellence, 
+              reliability, and inspiration in every journey we create.
             </Text>
           </View>
         </View>

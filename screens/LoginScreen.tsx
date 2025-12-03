@@ -29,6 +29,8 @@ import {
 import { auth, db } from '../firebaseConfig';
 import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 import { RootStackParamList } from '../App';
+import Constants from 'expo-constants';
+const googleClientId = Constants.expoConfig?.extra?.EXPO_PUBLIC_GOOGLE_CLIENT_ID;
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -293,7 +295,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: '100%',
     position: 'relative', // important for absolute child
-    marginBottom: 12,
+    marginBottom: 16,
   },
   input: {
     width: '100%',
@@ -304,7 +306,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fafafa',
     paddingRight: 40, // space for eye icon
     textAlignVertical: 'center',
-    marginBottom: 16,
   },
   forgotPassword: { color: '#007bff', alignSelf: 'flex-end', marginBottom: 16 },
   signInButton: { backgroundColor: '#228B73', paddingVertical: 14, borderRadius: 10, width: '100%', marginBottom: 20 },
@@ -313,12 +314,12 @@ const styles = StyleSheet.create({
   googleButton: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#DB4437', paddingVertical: 12, paddingHorizontal: 20, borderRadius: 10, marginBottom: 25 },
   googleText: { color: '#fff', fontWeight: '500', fontSize: 16 },
   signUpText: { fontSize: 15, color: '#444', marginTop: 5 },
-  eyeIcon: {
-    position: 'absolute',
-    right: 12,
-    top: '50%',
-    transform: [{ translateY: -10 }], // vertically center the icon
-  },
+eyeIcon: {
+  position: 'absolute',
+  right: 12,
+  top: '50%',
+  transform: [{ translateY: -12 }], 
+},
   twoFAContainer: {
     flex: 1,
     justifyContent: 'center',
