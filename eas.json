@@ -4,8 +4,12 @@
   },
   "build": {
     "production": {
+      "node": "18.18.0",
       "android": {
         "buildType": "apk"
+      },
+      "ios": {
+        "simulator": false
       }
     }
   }
