@@ -18,6 +18,11 @@ const config: ExpoConfig = {
     supportsTablet: true,
   },
   android: {
+    splash: {  // <--- add this section
+      image: './assets/splash-icon-v2.png',
+      resizeMode: 'contain',
+      backgroundColor: '#ffffff',
+    },
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon-v2.png',
       backgroundColor: '#ffffff',
@@ -30,15 +35,15 @@ const config: ExpoConfig = {
   web: {
     favicon: './assets/favicon.png',
   },
-plugins: [
-  "expo-build-properties",
-  "expo-web-browser",
-  "expo-image-picker",
-  "expo-file-system",
-  "expo-system-ui",
-  "expo-splash-screen",
-  "expo-updates"
-],
+  plugins: [
+    "expo-build-properties",
+    "expo-web-browser",
+    "expo-image-picker",
+    "expo-file-system",
+    "expo-system-ui",
+    "expo-splash-screen",
+    "expo-updates"
+  ],
   extra: {
     SUPABASE_URL: process.env.SUPABASE_URL,
     SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
@@ -55,6 +60,5 @@ plugins: [
     },
   },
 };
-
 
 export default config;
