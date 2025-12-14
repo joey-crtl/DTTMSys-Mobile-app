@@ -1,4 +1,3 @@
-// AirlinePackageScreen.tsx
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -12,22 +11,27 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
-import { useFavorites, PackageType, RootStackParamList } from "../App";
+import { useFavorites } from "../components/FavoritesContext";
+import { useBottomNav } from '../components/BottomNavContext';
+import { PackageType, RootStackParamList } from "../App";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { supabase } from "../supabaseClient";
+import { useRoute } from "@react-navigation/native";
 
 type Props = NativeStackScreenProps<RootStackParamList, "AirlinePackageScreen">;
 
 const AirlinePackageScreen: React.FC<Props> = ({ navigation }) => {
-  const [selectedTab, setSelectedTab] = useState<
-    "home" | "flights" | "favorites" | "profile"
-  >("flights");
-
   const [localPackages, setLocalPackages] = useState<PackageType[]>([]);
+  const { selectedTab, setSelectedTab } = useBottomNav();
   const [internationalPackages, setInternationalPackages] = useState<PackageType[]>([]);
   const [loading, setLoading] = useState(true);
 
   const { favorites, addFavorite, removeFavorite, isFavorite } = useFavorites();
+  const route = useRoute();
+  
+  useEffect(() => {
+    setSelectedTab("flights"); // AirlinePackageScreen tab
+  }, []);
 
   useEffect(() => {
     fetchPackages();
@@ -36,7 +40,6 @@ const AirlinePackageScreen: React.FC<Props> = ({ navigation }) => {
   const fetchPackages = async () => {
     setLoading(true);
     try {
-      // Fetch international packages
       const { data: internationalData, error: intError } = await supabase
         .from("package_info")
         .select("*");
@@ -50,9 +53,9 @@ const AirlinePackageScreen: React.FC<Props> = ({ navigation }) => {
         location: item.destination || "Unknown",
         price: Number(item.price),
         available: Number(item.available ?? 0),
-        itinerary: item.itinerary 
-          ? typeof item.itinerary === 'string' 
-            ? JSON.parse(item.itinerary) 
+        itinerary: item.itinerary
+          ? typeof item.itinerary === "string"
+            ? JSON.parse(item.itinerary)
             : item.itinerary
           : [],
         departure: "N/A",
@@ -61,10 +64,10 @@ const AirlinePackageScreen: React.FC<Props> = ({ navigation }) => {
         stops: [],
         inclusions: item.inclusions ? item.inclusions.split("\n") : [],
         exclusions: item.exclusions ? item.exclusions.split("\n") : [],
-        gallery: item.add_photo?.map((url: string) => ({ uri: url })) || [],
+        gallery: Array.isArray(item.add_photo) ? item.add_photo.map((url: string) => ({ uri: url })) : [],
+        isLocal: false,
       }));
 
-      // Fetch local/domestic packages
       const { data: localData, error: localError } = await supabase
         .from("local_package_info")
         .select("*")
@@ -79,18 +82,19 @@ const AirlinePackageScreen: React.FC<Props> = ({ navigation }) => {
         location: item.destination || "Unknown",
         price: Number(item.price),
         available: Number(item.available ?? 0),
-        itinerary: item.itinerary 
-          ? typeof item.itenerary ==="string" 
-          ? JSON.parse(item.itinerary) 
-          : item.itenerary
-          :[],
+        itinerary: item.itinerary
+          ? typeof item.itinerary === "string"
+            ? JSON.parse(item.itinerary)
+            : item.itinerary
+          : [],
         departure: "N/A",
         arrival: item.destination || "N/A",
         duration: "N/A",
         stops: [],
         inclusions: item.inclusions ? item.inclusions.split("\n") : [],
         exclusions: item.exclusions ? item.exclusions.split("\n") : [],
-        gallery: item.add_photo?.map((url: string) => ({ uri: url })) || [],
+        gallery: Array.isArray(item.add_photo) ? item.add_photo.map((url: string) => ({ uri: url })) : [],
+        isLocal: true,
       }));
 
       setInternationalPackages(internationalMapped);
@@ -102,42 +106,42 @@ const AirlinePackageScreen: React.FC<Props> = ({ navigation }) => {
     }
   };
 
-  const toggleFavorite = (pkg: PackageType) => {
-    if (isFavorite(pkg.id)) removeFavorite(pkg.id);
-    else addFavorite(pkg);
-  };
+const toggleFavorite = (pkg: PackageType) => {
+  if (isFavorite(pkg.id, pkg.isLocal)) removeFavorite(pkg.id, pkg.isLocal);
+  else addFavorite(pkg);
+};
 
-  const renderPackageCard = (item: PackageType) => {
-    const favorited = isFavorite(item.id);
-    return (
-      <View key={item.id} style={styles.cardHorizontal}>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("PackageDetails", { selectedPackage: item })
-          }
-        >
-          {item.image && <Image source={item.image} style={styles.image} />}
-        </TouchableOpacity>
+const renderPackageCard = (item: PackageType) => {
+  const favorited = isFavorite(item.id, item.isLocal);
+  return (
+    <View key={item.id} style={styles.cardHorizontal}>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("PackageDetails", { selectedPackage: item })
+        }
+      >
+        {item.image && <Image source={item.image} style={styles.image} />}
+      </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.heartButton}
-          onPress={() => toggleFavorite(item)}
-        >
-          <FontAwesome
-            name={favorited ? "heart" : "heart-o"}
-            size={22}
-            color={favorited ? "#ff595e" : "#fff"}
-          />
-        </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.heartButton}
+        onPress={() => toggleFavorite(item)}
+      >
+        <FontAwesome
+          name={favorited ? "heart" : "heart-o"}
+          size={22}
+          color={favorited ? "#ff595e" : "#fff"}
+        />
+      </TouchableOpacity>
 
-        <View style={styles.cardText}>
-          <Text style={styles.destination}>{item.destination}</Text>
-          <Text style={styles.airline}>{item.airline}</Text>
-          <Text style={styles.price}>₱{item.price.toLocaleString()}</Text>
-        </View>
+      <View style={styles.cardText}>
+        <Text style={styles.destination}>{item.destination}</Text>
+        <Text style={styles.airline}>{item.airline}</Text>
+        <Text style={styles.price}>₱{item.price.toLocaleString()}</Text>
       </View>
-    );
-  };
+    </View>
+  );
+};
 
   return (
     <SafeAreaView style={styles.container}>
@@ -151,7 +155,6 @@ const AirlinePackageScreen: React.FC<Props> = ({ navigation }) => {
           <ActivityIndicator size="large" color="#228B73" style={{ marginTop: 30 }} />
         ) : (
           <>
-            {/* 🌍 International Section */}
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>🌍 International Packages</Text>
               <View style={styles.sectionDivider} />
@@ -162,7 +165,6 @@ const AirlinePackageScreen: React.FC<Props> = ({ navigation }) => {
               )}
             </View>
 
-            {/* 🇵🇭 Local/Domestic Section */}
             <View style={[styles.sectionContainer, { backgroundColor: "#f0faf7" }]}>
               <Text style={styles.sectionTitle}>🇵🇭 Domestic Packages</Text>
               <View style={styles.sectionDivider} />
@@ -176,7 +178,7 @@ const AirlinePackageScreen: React.FC<Props> = ({ navigation }) => {
         )}
       </ScrollView>
 
-      {/* ✅ Bottom Navigation */}
+      {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
         <TouchableOpacity
           onPress={() => {
@@ -235,6 +237,7 @@ const AirlinePackageScreen: React.FC<Props> = ({ navigation }) => {
 };
 
 export default AirlinePackageScreen;
+
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff" },

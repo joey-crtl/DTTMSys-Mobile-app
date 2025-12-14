@@ -13,7 +13,9 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList, PackageType, useFavorites } from "../App";
+import { useFavorites } from "../components/FavoritesContext";
+import { PackageType, RootStackParamList } from "../App";
+import { useBottomNav } from '../components/BottomNavContext';
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { supabase } from "../supabaseClient";
 
@@ -22,7 +24,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "SearchResults">;
 const SearchResultsScreen: React.FC<Props> = ({ route, navigation }) => {
   const user = route.params?.user ?? "Guest";
   const [destination, setDestination] = useState("");
-  const [selectedTab, setSelectedTab] = useState<"home" | "flights" | "favorites" | "profile">("home");
+  const { selectedTab, setSelectedTab } = useBottomNav();
 
   const { addFavorite, removeFavorite, isFavorite } = useFavorites();
 
@@ -106,8 +108,8 @@ const SearchResultsScreen: React.FC<Props> = ({ route, navigation }) => {
   }, [destination, packages]);
 
   const toggleFavorite = (item: PackageType) => {
-    if (isFavorite(item.id)) {
-      removeFavorite(item.id, item.isLocal); // ✅ Pass isLocal
+    if (isFavorite(item.id, item.isLocal)) {
+      removeFavorite(item.id, item.isLocal);
     } else {
       addFavorite(item);
     }
@@ -118,7 +120,7 @@ const SearchResultsScreen: React.FC<Props> = ({ route, navigation }) => {
   };
 
   const renderCard = (item: PackageType, isGrid: boolean = false) => {
-    const favorited = isFavorite(item.id);
+    const favorited = isFavorite(item.id, item.isLocal);
 
     return (
       <View key={item.id} style={isGrid ? styles.cardGrid : styles.cardHorizontal}>
@@ -129,7 +131,7 @@ const SearchResultsScreen: React.FC<Props> = ({ route, navigation }) => {
 
         <View style={styles.cardContent}>
           <Text style={isGrid ? styles.destinationTextReco : styles.airline}>
-            {isGrid ? item.destination : item.airline}
+            {item.airline}
           </Text>
           <Text style={isGrid ? styles.priceReco : styles.destinationText}>
             ₱{item.price.toLocaleString()} /head
@@ -191,17 +193,56 @@ const recommendedPackages = packages.filter(pkg => (pkg.available ?? 0) > 0);
 
         {/* Bottom Navigation */}
         <View style={styles.bottomNav}>
-          <TouchableOpacity onPress={() => { setSelectedTab("home"); navigation.navigate("SearchResults", { origin: "", destination: "", user }); }}>
-            <Ionicons name="home-outline" size={28} color={selectedTab === "home" ? "#228B73" : "#999"} />
+          <TouchableOpacity
+            onPress={() => {
+              setSelectedTab("home");
+              navigation.navigate("SearchResults", { origin: "", destination: "", user });
+            }}
+          >
+            <Ionicons
+              name="home-outline"
+              size={28}
+              color={selectedTab === "home" ? "#228B73" : "#999"}
+            />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => { setSelectedTab("flights"); navigation.navigate("AirlinePackageScreen"); }}>
-            <Ionicons name="airplane-outline" size={28} color={selectedTab === "flights" ? "#228B73" : "#999"} />
+
+          <TouchableOpacity
+            onPress={() => {
+              setSelectedTab("flights");
+              navigation.navigate("AirlinePackageScreen");
+            }}
+          >
+            <Ionicons
+              name="airplane-outline"
+              size={28}
+              color={selectedTab === "flights" ? "#228B73" : "#999"}
+            />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => { setSelectedTab("favorites"); navigation.navigate("FavoritesScreen"); }}>
-            <FontAwesome name={selectedTab === "favorites" ? "heart" : "heart-o"} size={26} color={selectedTab === "favorites" ? "#228B73" : "#999"} />
+
+          <TouchableOpacity
+            onPress={() => {
+              setSelectedTab("favorites");
+              navigation.navigate("FavoritesScreen");
+            }}
+          >
+            <FontAwesome
+              name={selectedTab === "favorites" ? "heart" : "heart-o"}
+              size={26}
+              color={selectedTab === "favorites" ? "#228B73" : "#999"}
+            />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => { setSelectedTab("profile"); navigation.navigate("ProfileScreen", { user }); }}>
-            <Ionicons name="person-outline" size={28} color={selectedTab === "profile" ? "#228B73" : "#999"} />
+
+          <TouchableOpacity
+            onPress={() => {
+              setSelectedTab("profile");
+              navigation.navigate("ProfileScreen", { user });
+            }}
+          >
+            <Ionicons
+              name="person-outline"
+              size={28}
+              color={selectedTab === "profile" ? "#228B73" : "#999"}
+            />
           </TouchableOpacity>
         </View>
       </View>

@@ -13,7 +13,9 @@ import {
   Alert,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList, useFavorites } from '../App';
+import { RootStackParamList,} from '../App';
+import { useFavorites } from "../components/FavoritesContext";
+import { useBottomNav } from '../components/BottomNavContext';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { getAuth } from 'firebase/auth'; // ✅ Added
 
@@ -21,12 +23,14 @@ type Props = NativeStackScreenProps<RootStackParamList, 'FavoritesScreen'>;
 
 const FavoritesScreen: React.FC<Props> = ({ navigation }) => {
   const { favorites, removeFavorite } = useFavorites();
-  const [selectedTab, setSelectedTab] = useState<
-    "home" | "flights" | "favorites" | "profile"
-  >("favorites");
+  const { selectedTab, setSelectedTab } = useBottomNav();
   const [isLoggedIn, setIsLoggedIn] = useState(false); // ✅ Added
 
   const auth = getAuth();
+
+    useEffect(() => {
+    setSelectedTab('favorites');
+  }, []);
 
   useEffect(() => {
     // ✅ Watch Firebase Auth state
@@ -65,7 +69,7 @@ const FavoritesScreen: React.FC<Props> = ({ navigation }) => {
         resizeMode="cover"
       />
       <View style={styles.cardContent}>
-        <Text style={styles.airline}>{item.isLocal ? item.name || 'Unknown Package' : item.airline || 'Unknown Airline'}</Text>
+        <Text style={styles.airline}>{item.airline || 'Unknown Package'}</Text>
         <Text style={styles.destination}>{item.destination || 'Unknown Destination'}</Text>
       </View>
 
@@ -166,7 +170,12 @@ const FavoritesScreen: React.FC<Props> = ({ navigation }) => {
           />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => setSelectedTab('favorites')}>
+        <TouchableOpacity
+          onPress={() => {
+            setSelectedTab('favorites');
+            navigation.navigate('FavoritesScreen');
+          }}
+        >
           <FontAwesome
             name={selectedTab === 'favorites' ? 'heart' : 'heart-o'}
             size={26}

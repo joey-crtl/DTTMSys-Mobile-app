@@ -14,6 +14,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import { File } from 'expo-file-system';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useBottomNav } from '../components/BottomNavContext';
 import { RootStackParamList } from '../App';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { getAuth, onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
@@ -25,7 +26,11 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
   const [user, setUser] = useState<any>(null);
   const [membership, setMembership] = useState<string>('');
   const [image, setImage] = useState<any>(require('../assets/nprofile.jpg'));
-  const [selectedTab, setSelectedTab] = useState<'home' | 'flights' | 'favorites' | 'profile'>('profile');
+  const { selectedTab, setSelectedTab } = useBottomNav();
+
+  useEffect(() => {
+    setSelectedTab('profile'); // mark this screen as active
+  }, []);
 
   // ✅ Load Firebase Auth user
   useEffect(() => {
@@ -302,7 +307,11 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
           />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => setSelectedTab('profile')}>
+        <TouchableOpacity
+          onPress={() => {
+            setSelectedTab('profile');
+          }}
+        >
           <Ionicons
             name="person-outline"
             size={28}
