@@ -16,6 +16,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList,} from '../App';
 import { useFavorites } from "../components/FavoritesContext";
 import { useBottomNav } from '../components/BottomNavContext';
+import { useBottomTab } from '../components/useBottomTab';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { getAuth } from 'firebase/auth'; // ✅ Added
 
@@ -23,14 +24,13 @@ type Props = NativeStackScreenProps<RootStackParamList, 'FavoritesScreen'>;
 
 const FavoritesScreen: React.FC<Props> = ({ navigation }) => {
   const { favorites, removeFavorite } = useFavorites();
-  const { selectedTab, setSelectedTab } = useBottomNav();
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // ✅ Added
+  const { selectedTab} = useBottomNav();
+  const [isLoggedIn, setIsLoggedIn] = useState(false); 
 
   const auth = getAuth();
 
-    useEffect(() => {
-    setSelectedTab('favorites');
-  }, []);
+   useBottomTab('favorites');
+
 
   useEffect(() => {
     // ✅ Watch Firebase Auth state
@@ -142,14 +142,13 @@ const FavoritesScreen: React.FC<Props> = ({ navigation }) => {
       {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
         <TouchableOpacity
-          onPress={() => {
-            setSelectedTab('home');
+          onPress={() =>
             navigation.navigate('SearchResults', {
               origin: '',
               destination: '',
               user: 'Guest',
-            });
-          }}
+            })
+          }
         >
           <Ionicons
             name="home-outline"
@@ -157,24 +156,19 @@ const FavoritesScreen: React.FC<Props> = ({ navigation }) => {
             color={selectedTab === 'home' ? '#228B73' : '#999'}
           />
         </TouchableOpacity>
+
         <TouchableOpacity
-          onPress={() => {
-            setSelectedTab("flights");
-            navigation.navigate("AirlinePackageScreen");
-          }}
+          onPress={() => navigation.navigate('AirlinePackageScreen')}
         >
           <Ionicons
             name="airplane-outline"
             size={28}
-            color={selectedTab === "flights" ? "#228B73" : "#999"}
+            color={selectedTab === 'flights' ? '#228B73' : '#999'}
           />
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => {
-            setSelectedTab('favorites');
-            navigation.navigate('FavoritesScreen');
-          }}
+          onPress={() => navigation.navigate('FavoritesScreen')}
         >
           <FontAwesome
             name={selectedTab === 'favorites' ? 'heart' : 'heart-o'}
@@ -184,10 +178,7 @@ const FavoritesScreen: React.FC<Props> = ({ navigation }) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => {
-            setSelectedTab('profile');
-            navigation.navigate('ProfileScreen', { user: 'Guest' });
-          }}
+          onPress={() => navigation.navigate('ProfileScreen', { user: 'Guest' })}
         >
           <Ionicons
             name="person-outline"

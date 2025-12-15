@@ -17,21 +17,21 @@ import { PackageType, RootStackParamList } from "../App";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { supabase } from "../supabaseClient";
 import { useRoute } from "@react-navigation/native";
+import { useBottomTab } from '../components/useBottomTab';
 
 type Props = NativeStackScreenProps<RootStackParamList, "AirlinePackageScreen">;
 
 const AirlinePackageScreen: React.FC<Props> = ({ navigation }) => {
   const [localPackages, setLocalPackages] = useState<PackageType[]>([]);
-  const { selectedTab, setSelectedTab } = useBottomNav();
+  const { selectedTab } = useBottomNav();
   const [internationalPackages, setInternationalPackages] = useState<PackageType[]>([]);
   const [loading, setLoading] = useState(true);
 
   const { favorites, addFavorite, removeFavorite, isFavorite } = useFavorites();
   const route = useRoute();
   
-  useEffect(() => {
-    setSelectedTab("flights"); // AirlinePackageScreen tab
-  }, []);
+  useBottomTab("flights");
+
 
   useEffect(() => {
     fetchPackages();
@@ -181,10 +181,13 @@ const renderPackageCard = (item: PackageType) => {
       {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
         <TouchableOpacity
-          onPress={() => {
-            setSelectedTab("home");
-            navigation.navigate("SearchResults", { origin: "", destination: "", user: "Guest" });
-          }}
+          onPress={() =>
+            navigation.navigate("SearchResults", {
+              origin: "",
+              destination: "",
+              user: "Guest",
+            })
+          }
         >
           <Ionicons
             name="home-outline"
@@ -194,10 +197,7 @@ const renderPackageCard = (item: PackageType) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => {
-            setSelectedTab("flights");
-            navigation.navigate("AirlinePackageScreen");
-          }}
+          onPress={() => navigation.navigate("AirlinePackageScreen")}
         >
           <Ionicons
             name="airplane-outline"
@@ -207,10 +207,7 @@ const renderPackageCard = (item: PackageType) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => {
-            setSelectedTab("favorites");
-            navigation.navigate("FavoritesScreen");
-          }}
+          onPress={() => navigation.navigate("FavoritesScreen")}
         >
           <FontAwesome
             name={selectedTab === "favorites" ? "heart" : "heart-o"}
@@ -220,10 +217,7 @@ const renderPackageCard = (item: PackageType) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => {
-            setSelectedTab("profile");
-            navigation.navigate("ProfileScreen");
-          }}
+          onPress={() => navigation.navigate("ProfileScreen")}
         >
           <Ionicons
             name="person-outline"

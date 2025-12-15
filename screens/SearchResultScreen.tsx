@@ -16,26 +16,88 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useFavorites } from "../components/FavoritesContext";
 import { PackageType, RootStackParamList } from "../App";
 import { useBottomNav } from '../components/BottomNavContext';
+import { useBottomTab } from '../components/useBottomTab';
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { supabase } from "../supabaseClient";
+import { useFocusEffect } from "@react-navigation/native";
+import { BackHandler, Animated } from "react-native";
+import { useCallback, useRef } from "react";
 
 type Props = NativeStackScreenProps<RootStackParamList, "SearchResults">;
 
 const SearchResultsScreen: React.FC<Props> = ({ route, navigation }) => {
   const user = route.params?.user ?? "Guest";
   const [destination, setDestination] = useState("");
-  const { selectedTab, setSelectedTab } = useBottomNav();
+  const { selectedTab } = useBottomNav();
 
   const { addFavorite, removeFavorite, isFavorite } = useFavorites();
 
   const [packages, setPackages] = useState<PackageType[]>([]);
   const [filteredPackages, setFilteredPackages] = useState<PackageType[]>([]);
   const [loading, setLoading] = useState(true);
+  const exitTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [showExitHint, setShowExitHint] = useState(false);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useBottomTab("home");
 
   // Fetch packages from both tables
   useEffect(() => {
     fetchPackages();
   }, []);
+
+  
+  const showExitMessage = () => {
+    setShowExitHint(true);
+    Animated.sequence([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+      Animated.delay(1200),
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start(() => setShowExitHint(false));
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        if (exitTimer.current) {
+          BackHandler.exitApp();
+          return true;
+        }
+
+        showExitMessage();
+
+        exitTimer.current = setTimeout(() => {
+          exitTimer.current = null;
+        }, 2000);
+
+        return true; // prevent going back
+      };
+
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        onBackPress
+      );
+
+      const unsubscribe = navigation.addListener("beforeRemove", e => {
+        e.preventDefault(); // block swipe-back
+        onBackPress();
+      });
+
+      return () => {
+        backHandler.remove();
+        unsubscribe();
+        if (exitTimer.current) clearTimeout(exitTimer.current);
+      };
+    }, [])
+  );
 
   const fetchPackages = async () => {
     setLoading(true);
@@ -191,13 +253,23 @@ const recommendedPackages = packages.filter(pkg => (pkg.available ?? 0) > 0);
           </View>
         </ScrollView>
 
+        {showExitHint && (
+          <Animated.View
+            style={[
+              styles.exitToast,
+              { opacity: fadeAnim },
+            ]}
+          >
+            <Text style={styles.exitToastText}>
+              Swipe again to exit
+            </Text>
+          </Animated.View>
+        )}
+
         {/* Bottom Navigation */}
         <View style={styles.bottomNav}>
           <TouchableOpacity
-            onPress={() => {
-              setSelectedTab("home");
-              navigation.navigate("SearchResults", { origin: "", destination: "", user });
-            }}
+            onPress={() => navigation.navigate("SearchResults", { origin: "", destination: "", user: "Guest" })}
           >
             <Ionicons
               name="home-outline"
@@ -207,10 +279,7 @@ const recommendedPackages = packages.filter(pkg => (pkg.available ?? 0) > 0);
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => {
-              setSelectedTab("flights");
-              navigation.navigate("AirlinePackageScreen");
-            }}
+            onPress={() => navigation.navigate("AirlinePackageScreen")}
           >
             <Ionicons
               name="airplane-outline"
@@ -220,10 +289,7 @@ const recommendedPackages = packages.filter(pkg => (pkg.available ?? 0) > 0);
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => {
-              setSelectedTab("favorites");
-              navigation.navigate("FavoritesScreen");
-            }}
+            onPress={() => navigation.navigate("FavoritesScreen")}
           >
             <FontAwesome
               name={selectedTab === "favorites" ? "heart" : "heart-o"}
@@ -233,10 +299,7 @@ const recommendedPackages = packages.filter(pkg => (pkg.available ?? 0) > 0);
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => {
-              setSelectedTab("profile");
-              navigation.navigate("ProfileScreen", { user });
-            }}
+            onPress={() => navigation.navigate("ProfileScreen")}
           >
             <Ionicons
               name="person-outline"
@@ -281,6 +344,20 @@ const styles = StyleSheet.create({
   seeMoreButtonReco: { paddingVertical: 6, paddingHorizontal: 10, borderRadius: 6, backgroundColor: "#fff", borderWidth: 1, borderColor: "#228B73", marginTop: 5 },
   seeMoreTextReco: { color: "#228B73", fontWeight: "500", fontSize: 12, marginLeft: 25 },
   bottomNav: { position: "absolute", bottom: 0, left: 0, right: 0, paddingVertical: 12, borderTopWidth: 1, borderTopColor: "#ddd", backgroundColor: "#fff", flexDirection: "row", justifyContent: "space-around" },
+  exitToast: {
+  position: "absolute",
+  bottom: 90,
+  alignSelf: "center",
+  backgroundColor: "rgba(0,0,0,0.8)",
+  paddingHorizontal: 20,
+  paddingVertical: 10,
+  borderRadius: 20,
+  zIndex: 999,
+},
+exitToastText: {
+  color: "#fff",
+  fontSize: 13,
+},
 });
 
 export default SearchResultsScreen;

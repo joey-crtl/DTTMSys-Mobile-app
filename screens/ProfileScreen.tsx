@@ -19,6 +19,7 @@ import { RootStackParamList } from '../App';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { getAuth, onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
 import { supabase } from '../supabaseClient';
+import { useBottomTab } from '../components/useBottomTab';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ProfileScreen'>;
 
@@ -26,11 +27,9 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
   const [user, setUser] = useState<any>(null);
   const [membership, setMembership] = useState<string>('');
   const [image, setImage] = useState<any>(require('../assets/nprofile.jpg'));
-  const { selectedTab, setSelectedTab } = useBottomNav();
+  const { selectedTab } = useBottomNav();
 
-  useEffect(() => {
-    setSelectedTab('profile'); // mark this screen as active
-  }, []);
+  useBottomTab("profile");
 
   // ✅ Load Firebase Auth user
   useEffect(() => {
@@ -265,57 +264,48 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
       {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
         <TouchableOpacity
-          onPress={() => {
-            setSelectedTab('home');
-            navigation.navigate('SearchResults', {
-              origin: '',
-              destination: '',
-              user: user?.email || 'Guest',
-            });
-          }}
+          onPress={() =>
+            navigation.navigate("SearchResults", {
+              origin: "",
+              destination: "",
+              user: "Guest",
+            })
+          }
         >
           <Ionicons
             name="home-outline"
             size={28}
-            color={selectedTab === 'home' ? '#228B73' : '#999'}
+            color={selectedTab === "home" ? "#228B73" : "#999"}
           />
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => {
-            setSelectedTab('flights');
-            navigation.navigate('AirlinePackageScreen');
-          }}
+          onPress={() => navigation.navigate("AirlinePackageScreen")}
         >
           <Ionicons
             name="airplane-outline"
             size={28}
-            color={selectedTab === 'flights' ? '#228B73' : '#999'}
+            color={selectedTab === "flights" ? "#228B73" : "#999"}
           />
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => {
-            setSelectedTab('favorites');
-            navigation.navigate('FavoritesScreen');
-          }}
+          onPress={() => navigation.navigate("FavoritesScreen")}
         >
           <FontAwesome
-            name={selectedTab === 'favorites' ? 'heart' : 'heart-o'}
+            name={selectedTab === "favorites" ? "heart" : "heart-o"}
             size={26}
-            color={selectedTab === 'favorites' ? '#228B73' : '#999'}
+            color={selectedTab === "favorites" ? "#228B73" : "#999"}
           />
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => {
-            setSelectedTab('profile');
-          }}
+          onPress={() => navigation.navigate("ProfileScreen")}
         >
           <Ionicons
             name="person-outline"
             size={28}
-            color={selectedTab === 'profile' ? '#228B73' : '#999'}
+            color={selectedTab === "profile" ? "#228B73" : "#999"}
           />
         </TouchableOpacity>
       </View>
