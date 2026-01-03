@@ -45,8 +45,8 @@ const config: ExpoConfig = {
     "expo-updates"
   ],
   extra: {
-    SUPABASE_URL: process.env.SUPABASE_URL || 'https://sdayzkpfodzqbpugprwq.supabase.co',
-    SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY|| 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNkYXl6a3Bmb2R6cWJwdWdwcndxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4MzA2NzQsImV4cCI6MjA3NDQwNjY3NH0.ozCxGQ2LSCVMNk2cWzeTFfpYJpW0LHzZ5KTzZnkPk5s',
+    SUPABASE_URL: process.env.SUPABASE_URL,
+    SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
     firebaseApiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
     firebaseAuthDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
     firebaseProjectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
