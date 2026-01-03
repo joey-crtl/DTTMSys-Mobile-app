@@ -84,112 +84,75 @@ const TravellerInfoScreen: React.FC<Props> = ({ navigation, route }) => {
     if (key === 'documentType' && value !== 'Passport') setPassportExpiration('');
   };
 
-  const handleSubmit = async () => {
-    if (!pkg) {
-      Alert.alert('Error', 'Package not found.');
-      return;
-    }
+const handleSubmit = async () => {
+  if (!pkg) {
+    Alert.alert('Error', 'Package not found.');
+    return;
+  }
 
-    // Safe parse numbers
-    const adults = parseInt(formData.adults) || 0;
-    const children = parseInt(formData.children) || 0;
-    const age = parseInt(formData.age) || 0;
-    const totalPassengers = adults + children;
+  const adults = parseInt(formData.adults) || 0;
+  const children = parseInt(formData.children) || 0;
+  const totalPassengers = adults + children;
 
-    if (totalPassengers < 1) {
-      Alert.alert('Error', 'Add at least one passenger.');
-      return;
-    }
+  if (totalPassengers < 1) {
+    Alert.alert('Error', 'Add at least one passenger.');
+    return;
+  }
 
-    if (formData.documentType === 'Passport' && !passportExpiration) {
-      Alert.alert('Error', 'Please fill your passport expiration date.');
-      return;
-    }
+  if (formData.documentType === 'Passport' && !passportExpiration) {
+    Alert.alert('Error', 'Please fill your passport expiration date.');
+    return;
+  }
 
-    // Prepare booking data
-    const bookingData = {
-      full_name: `${formData.firstName} ${formData.middleName || ''} ${formData.lastName}`.trim(),
-      first_name: formData.firstName,
-      middle_name: formData.middleName || null,
-      last_name: formData.lastName,
-      email: formData.email,
-      package_id: pkg.isLocal ? null : pkg.id || null,
-      local_package_id: pkg.isLocal ? pkg.id || null : null,
-      status: 'Pending',
-      travel_date: null,
-      passengers: totalPassengers,
-      adults,
-      children,
-      age,
-      dob: formData.dob,
-      birth_place: formData.birthPlace,
-      gender: formData.gender,
-      phone: formData.phone,
-      passport: formData.passport || null,
-      document_type: formData.documentType,
-      nationality: formData.nationality,
-      passport_expiration: passportExpiration || null,
-      address: formData.address || null,
-    };
-
-    try {
-      // Validate foreign keys
-      if (!pkg.isLocal) {
-        const { data: packageExists, error: packageError } = await supabase
-          .from('package_info')
-          .select('id')
-          .eq('id', pkg.id)
-          .single();
-        if (packageError || !packageExists) throw new Error('Selected package does not exist.');
-      } else {
-        const { data: localExists, error: localError } = await supabase
-          .from('local_package_info')
-          .select('id')
-          .eq('id', pkg.id)
-          .single();
-        if (localError || !localExists) throw new Error('Selected local package does not exist.');
-      }
-
-      // Insert booking
-      const { data, error } = await supabase
-        .from('booking_info')
-        .insert([bookingData])
-        .select();
-
-      if (error) throw error;
-
-      console.log('Booking Insert Response:', data);
-
-      // Send email
-      const response = await fetch(
-        'https://sdayzkpfodzqbpugprwq.supabase.co/functions/v1/send_booking_email',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-          },
-          body: JSON.stringify(bookingData),
-        }
-      );
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Email Error ${response.status}: ${errorText}`);
-      }
-
-      Alert.alert('Success', 'Booking completed! A receipt has been sent to your email.');
-      setShowDetailsModal(false);
-
-      navigation.navigate('Confirmation', {
-        bookingId: data[0].id,
-        user: pkg.destination || 'Guest',
-      });
-    } catch (err: any) {
-      console.error('Booking Error:', err);
-      Alert.alert('Error', err.message || 'Failed to complete booking.');
-    }
+  const bookingData = {
+    firstName: formData.firstName,
+    middleName: formData.middleName || null,
+    lastName: formData.lastName,
+    email: formData.email,
+    phone: formData.phone,
+    adults,
+    children,
+    documentType: formData.documentType,
+    passport: formData.passport || null,
+    nationality: formData.nationality,
+    address: formData.address || null,
   };
+
+  try {
+    // Call your Edge Function
+    const response = await fetch(
+      'https://sdayzkpfodzqbpugprwq.supabase.co/functions/v1/send_booking_email',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`, // your Supabase anon key
+        },
+        body: JSON.stringify(bookingData),
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Email Error ${response.status}: ${errorText}`);
+    }
+
+    const result = await response.json();
+    console.log('Email result:', result);
+
+    Alert.alert('Success', 'Booking completed! A receipt has been sent to your email.');
+    setShowDetailsModal(false);
+
+    // Navigate to confirmation
+    navigation.navigate('Confirmation', {
+      bookingId: pkg.id,
+      user: pkg.destination || 'Guest',
+    });
+  } catch (err: any) {
+    console.error('Booking Error:', err);
+    Alert.alert('Error', err.message || 'Failed to complete booking.');
+  }
+};
 
   return (
     <SafeAreaView style={styles.safeArea}>
